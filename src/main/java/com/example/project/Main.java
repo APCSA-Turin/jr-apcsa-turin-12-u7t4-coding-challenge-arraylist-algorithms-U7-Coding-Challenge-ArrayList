@@ -75,7 +75,8 @@ public class Main{
      *  @param wordList  arraylist of Strings
      */
     public static ArrayList<String> duplicateUpperEnd(ArrayList<String> wordList){
-        for (int i = 0; i < wordList.size(); i++) {
+        int size = wordList.size();
+        for (int i = 0; i < size; i++) {
             wordList.add(wordList.get(i).toUpperCase());
         }
         return wordList;
@@ -216,15 +217,26 @@ public class Main{
     // notAlone([1, 2, 3, 2, 5, 2], 2) → [1, 3, 3, 5, 5, 5]
     // notAlone([3, 4], 3) → [3, 3]
     public static ArrayList<Integer> notAlone(ArrayList<Integer> list, int val){
-        int x = list.indexOf(val);
-        if (x == 0) {
-            list.set(x, list.get(x + 1));
-        } else if (x == list.size() - 1) {
-            list.set(x, x - 1);
-        } else {
-            Integer y = list.get(x - 1) > list.get(x + 1) ? list.get(x - 1) : list.get(x + 1);
-            list.set(x, y);
+        int count = 0;
+        for (Integer integer : list) {
+            if (integer == val) {
+                count++;
+            }
         }
+        for (int i = 0; i < count; i++) {
+            int x = list.indexOf(val);
+            if (x == 0) {
+                if (list.get(x) < list.get(x + 1)) {
+                    list.set(x, list.get(x + 1));
+                }
+            } else if (x == list.size() - 1) {
+                list.set(x, list.get(x - 1));
+            } else {
+                Integer y = list.get(x - 1) > list.get(x + 1) ? list.get(x - 1) : list.get(x + 1);
+                list.set(x, y);
+            }
+        }
+        System.out.println(list);
         return list;
     }
 
@@ -313,6 +325,43 @@ public class Main{
    *  @param numList  numList of ints
    */
     public static ArrayList<Integer> modes(int[] numList){
-        return new ArrayList<Integer>();
+        ArrayList<Integer> x = new ArrayList<>();
+        ArrayList<Integer> y = new ArrayList<>();
+        ArrayList<Integer> modes = new ArrayList<>();
+        Boolean same = true;
+
+        for (Integer num : numList) {
+            if (x.contains(num)) {
+                int i = x.indexOf(num);
+                y.set(i, y.get(i) + 1);
+            } else {
+                x.add(num);
+                y.add(1);
+            }
+        }
+
+        int max = 0;
+        for (Integer num : y) {
+            if (num > max) {
+                max = num;
+            }
+        }
+
+        for (Integer num : y) {
+            if (num < max) {
+                same = false;
+            }
+        }
+
+        if (same) {
+            return modes;
+        } else {
+            for (int i = 0; i < y.size(); i++) {
+                if (y.get(i) == max) {
+                    modes.add(x.get(i));
+                }
+            }
+            return modes;
+        }
     }
 }
